@@ -1,3 +1,3 @@
 # Reverse-Shell
 Reverse Shell
-Shell exploit for passing commands in python, built in .exe
+Reverse-Shell exploit for passing commands to victim's PC, coded in Python, but made into .exe for easier haxing.
