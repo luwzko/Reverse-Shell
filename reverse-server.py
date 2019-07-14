@@ -33,6 +33,7 @@ def listenExec():
         try:
             cmd = input("\n$ ")
             if cmd == "quit":
+                conn.close()
                 exit(0)
             else: pass
             send_msg(conn,bytearray(cmd, "utf-8"))
